@@ -8,9 +8,9 @@
           @search="onSearch"
           @cancel="onCancel"
       ></van-search>
-      <search-list v-if="showList && flag" :searchList="searchList" :recommend="recommend"></search-list>
+      <search-list v-if="showList && flag && showValue" :searchList="searchList" :recommend="recommend"></search-list>
       <div v-else>
-        <div  class="hot">
+        <div class="hot">
           <h3>
             热门搜索
           </h3>
@@ -52,7 +52,8 @@
         showList: false,
         searchList: [],
         recommend: {},
-        flag: false
+        flag: false,
+        showValue: false
       }
     },
     methods: {
@@ -71,12 +72,12 @@
       handleItem (item) {
         this.$com.req(`api/getSearchByKey?key=${item.k}`).then(response => {
           let res = response.response.data
-
           if (res) {
             this.searchList = res.song.list
             this.recommend = res.zhida
             this.showList = true
             this.flag = true
+            this.showValue = true
           }
         })
       }
@@ -100,8 +101,12 @@
               this.recommend = res.zhida
               this.showList = true
               this.flag = true
+              this.value = val
+              this.showValue = true
             }
           })
+        } else {
+          this.showValue = false
         }
       }
     },
