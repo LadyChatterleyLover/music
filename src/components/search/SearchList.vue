@@ -1,26 +1,50 @@
 <template>
   <div class="list">
-
     <van-tabs v-model="active" color="#31c27c">
       <van-tab title="歌曲">
         <div class="top">
-          <div class="title">
+          <div class="title" v-if="!showType && !zhidaType">
             为您推荐
           </div>
-          <div class="t-desc">
+          <div class="t-desc" v-if="zhidaSinger && showSinger">
             <div class="t-img">
-              <img :src="recommend.pic" alt="">
+              <img :src="zhidaSinger.singerPic" style="border-radius: 50%;">
             </div>
             <div class="t-title">
               <div>
-                MV: {{recommend.title}}
+                歌手: {{zhidaSinger.singerName}}
               </div>
-              <div >{{recommend.desc}}</div>
+              <div style="color: #ccc">
+                <span>歌曲：{{zhidaSinger.songNum}}</span>&nbsp;
+                <span>专辑：{{zhidaSinger.albumNum}}</span>&nbsp;
+                <span>视频：{{zhidaSinger.mvNum}}</span>
+              </div>
             </div>
             <div class="t-icon">
               <van-icon name="arrow"></van-icon>
             </div>
           </div>
+          <div class="t-desc" v-if="zhidaMv && showMv">
+            <div class="t-img">
+              <img :src="zhidaMv.pic" alt="">
+            </div>
+            <div class="t-title">
+              <div>
+                MV: {{zhidaMv.title}}
+              </div>
+              <div >{{zhidaMv.desc}}</div>
+            </div>
+            <div class="t-icon">
+              <van-icon name="arrow"></van-icon>
+            </div>
+          </div>
+          <div v-if="zhidaType && showType"></div>
+        </div>
+        <div class="play">
+          <div>
+            <van-icon name="play-circle-o" size="20px" color="#31c27c"></van-icon>
+          </div>
+          <div>全部播放</div>
         </div>
         <div v-for="(item, index) in searchList" :key="item.id" class="item">
           <div style="width: 100%">
@@ -70,7 +94,7 @@
       <van-tab title="歌手">内容 4</van-tab>
     </van-tabs>
   </div>
-  
+
 </template>
 
 <script>
@@ -78,7 +102,12 @@
     name: "SearchList",
     components: {},
     props: {
-
+      searchList: {
+        type: Array
+      },
+      recommend: {
+        type: Object
+      }
     },
     data() {
       return {
@@ -88,6 +117,12 @@
         singer: [], // 搜索结果的歌手
         song: [], // 搜索结果的歌曲
         isShowMore: false,
+        zhidaSinger: {},
+        zhidaMv: {},
+        zhidaType: false,
+        showSinger: false,
+        showMv: false,
+        showType: false
       }
     },
     methods: {
@@ -96,21 +131,29 @@
       }
     },
     mounted() {
-      console.log(this.$store.state.recommend)
+      if (this.recommend.zhida_singer) {
+        this.zhidaSinger = this.recommend.zhida_singer
+        this.showSinger = true
+      }
+      if (this.recommend.zhida_mv) {
+        this.zhidaMv = this.recommend.zhida_mv
+        this.showMv = true
+      }
+      if (this.recommend.type === null) {
+        this.zhidaType = true
+        this.showType = true
+      }
     },
     created() {
 
     },
     filters: {},
     computed: {
-      searchList () {
-        return this.$store.state.searchList
-      },
-      recommend () {
-        return this.$store.state.recommend
-      }
+
     },
-    watch: {},
+    watch: {
+
+    },
     directives: {}
   }
 </script>
@@ -120,10 +163,27 @@
     $color: #31c27c;
     color: $color;
   }
+  .play {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    div {
+      display: flex;
+      align-items: center;
+      &:first-child {
+        margin: 10px 20px;
+      }
+      &:last-child {
+        font-size: 28px;
+      }
+    }
+  }
   .top {
     background: #eee;
     .title {
       margin: 20px;
+      margin-top: 0;
       font-size: 24px;
       color: #ccc;
       position: relative;
@@ -157,7 +217,7 @@
     background: #fff !important;
   }
   .item {
-    margin: 50px 0 12px 30px;
+    margin: 20px 0 12px 30px;
     display: flex;
     align-items: center;
     position: relative;

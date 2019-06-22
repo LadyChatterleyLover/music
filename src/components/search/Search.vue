@@ -8,7 +8,7 @@
           @search="onSearch"
           @cancel="onCancel"
       ></van-search>
-      <search-list v-if="showList"></search-list>
+      <search-list v-if="showList && flag" :searchList="searchList" :recommend="recommend"></search-list>
       <div v-else>
         <div  class="hot">
           <h3>
@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -51,7 +51,8 @@
         hotKey: [], // 搜索热词
         showList: false,
         searchList: [],
-        recommend: {}
+        recommend: {},
+        flag: false
       }
     },
     methods: {
@@ -70,9 +71,13 @@
       handleItem (item) {
         this.$com.req(`api/getSearchByKey?key=${item.k}`).then(response => {
           let res = response.response.data
-          this.$store.state.searchList = res.song.list
-          this.$store.state.recommend = res.zhida.zhida_mv
-          this.showList = true
+
+          if (res) {
+            this.searchList = res.song.list
+            this.recommend = res.zhida
+            this.showList = true
+            this.flag = true
+          }
         })
       }
     },
@@ -90,8 +95,12 @@
           this.showList = true
           this.$com.req(`api/getSearchByKey?key=${val}`).then(response => {
             let res = response.response.data
-            this.searchList = res.song.list
-            this.$store.state.recommend = res.zhida.zhida_mv
+            if (res) {
+              this.searchList = res.song.list
+              this.recommend = res.zhida
+              this.showList = true
+              this.flag = true
+            }
           })
         }
       }
