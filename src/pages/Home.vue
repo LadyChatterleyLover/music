@@ -121,6 +121,9 @@
     },
     mounted() {
       this.getData()
+      // 初始化搜索记录
+      let arr = []
+      localStorage.setItem('searchArr', JSON.stringify(arr))
     },
     created() {
 

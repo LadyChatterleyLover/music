@@ -8,6 +8,7 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import 'lib-flexible';
 import axios from 'axios'
+import lodash from 'lodash'
 
 
 
@@ -23,7 +24,7 @@ axios.interceptors.response.use(
 Vue.use(Vant);
 
 
-
+Vue.prototype.$lodash = lodash
 Vue.prototype.$com = http
 Vue.prototype.$moment = moment
 Vue.config.productionTip = false

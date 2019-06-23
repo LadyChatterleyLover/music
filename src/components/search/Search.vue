@@ -15,26 +15,47 @@
             热门搜索
           </h3>
           <div class="desc">
-            <div v-for="(item, index) in hotKey.slice(0, 12)" :key="item.n" class="item" :class="{active: index === 0}" @click="handleItem(item)">
+            <div v-for="(item, index) in hotKey.slice(0, 12)" :key="item.n" class="item" :class="{active: index === 0}"
+                 @click="handleItem(item)">
               <div class="name">
                 {{item.k}}
               </div>
             </div>
           </div>
         </div>
-        <div class="history">
+        <div class="history" v-if="showHistory">
           <h3>
             搜索历史
           </h3>
+          <div class="desc">
+            <div v-for="(item, index) in searchArr" :key="index" class="item" @click="handleItem(item)">
+              <div class="name">
+                {{item.k}}
+              </div>
+            </div>
+            <div class="d-icon" @click="clearHistory">
+              <van-icon name="delete" size="18px"></van-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <van-dialog
+        v-model="showFlag"
+        show-cancel-button
+        @confirm="confirm"
+    >
+     <div class="dialog">
+       是否确认清空搜索历史？
+     </div>
+    </van-dialog>
   </div>
 
 </template>
 
 <script>
   import searchList from './SearchList'
+
   export default {
     name: "Search",
     components: {
@@ -53,23 +74,26 @@
         searchList: [],
         recommend: {},
         flag: false,
-        showValue: false
+        showValue: false,
+        searchArr: JSON.parse(localStorage.searchArr),
+        showFlag: false, // 是否显示弹框
+        showHistory: true, // 是否显示搜索历史
       }
     },
     methods: {
-      getHotKey () {
+      getHotKey() {
         this.$com.req('api/getHotkey').then(response => {
           let res = response.response.data
           this.hotKey = res.hotkey
         })
       },
-      onSearch () {
+      onSearch() {
 
       },
-      onCancel () {
+      onCancel() {
         this.$emit('update:showSearch', false)
       },
-      handleItem (item) {
+      handleItem(item) {
         this.$com.req(`api/getSearchByKey?key=${item.k}`).then(response => {
           let res = response.response.data
           if (res) {
@@ -80,6 +104,21 @@
             this.showValue = true
           }
         })
+        let arr = JSON.parse(localStorage.searchArr)
+        let obj = {
+          k: item.k
+        }
+        arr.push(obj)
+        arr = this.$lodash.unionBy(arr, 'k')
+        localStorage.setItem('searchArr', JSON.stringify(arr))
+      },
+      clearHistory () {
+        this.showFlag = true
+      },
+      confirm () {
+        this.showHistory = false
+        let arr = []
+        localStorage.setItem('searchArr', JSON.stringify(arr))
       }
     },
     mounted() {
@@ -91,8 +130,14 @@
     filters: {},
     computed: {},
     watch: {
-      'value' (val) {
+      'value'(val) {
         if (val !== '') {
+          let arr = JSON.parse(localStorage.searchArr)
+          let obj = {
+            k: val
+          }
+          arr.push(obj)
+          localStorage.setItem('searchArr', JSON.stringify(arr))
           this.showList = true
           this.$com.req(`api/getSearchByKey?key=${val}`).then(response => {
             let res = response.response.data
@@ -117,10 +162,12 @@
 <style scoped lang="scss">
   .search {
     background: #f8f8f8;
-    .hot {
+
+    .hot, .history {
       h3 {
         margin: 20px;
       }
+
       .desc {
         width: 100%;
         height: 100%;
@@ -128,22 +175,29 @@
         align-items: center;
         padding-left: 30px;
         flex-wrap: wrap;
+        position: relative;
         .item {
           /*width: 23%;*/
           margin: 10px;
+
           .name {
             padding: 10px 20px;
             border-radius: 20px;
             background: #fff;
           }
         }
+        .d-icon {
+          position: absolute;
+          top: 16px;
+          right: 60px;
+        }
       }
     }
-    .history {
-      h3 {
-        margin: 20px;
-      }
-    }
+  }
+  .dialog {
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
   }
   .active {
     $color: #31c27c;

@@ -24,6 +24,22 @@
               <van-icon name="arrow"></van-icon>
             </div>
           </div>
+          <div class="t-desc" v-if="zhidaAlbum && showAlbum">
+            <div class="t-img">
+              <img :src="zhidaAlbum.albumPic" style="border-radius: 50%;">
+            </div>
+            <div class="t-title">
+              <div>
+                专辑: {{zhidaAlbum.albumName}}
+              </div>
+              <div style="color: #ccc">
+                <span>歌曲：{{zhidaAlbum.singername_hilight}}</span>&nbsp;
+              </div>
+            </div>
+            <div class="t-icon">
+              <van-icon name="arrow"></van-icon>
+            </div>
+          </div>
           <div class="t-desc" v-if="zhidaMv && showMv">
             <div class="t-img">
               <img :src="zhidaMv.pic" alt="">
@@ -117,12 +133,14 @@
         singer: [], // 搜索结果的歌手
         song: [], // 搜索结果的歌曲
         isShowMore: false,
-        zhidaSinger: {},
-        zhidaMv: {},
-        zhidaType: false,
+        zhidaSinger: {}, // 搜素结果为歌手
+        zhidaMv: {}, // 搜索结果为mv
+        zhidaType: false, // 搜索结果为空
+        zhidaAlbum: {}, // 搜索结果为专辑
         showSinger: false,
         showMv: false,
-        showType: false
+        showType: false,
+        showAlbum: false
       }
     },
     methods: {
@@ -139,6 +157,10 @@
         this.zhidaMv = this.recommend.zhida_mv
         this.showMv = true
       }
+      if (this.recommend.zhida_album) {
+        this.zhidaAlbum = this.recommend.zhida_album
+        this.showAlbum = true
+      }
       if (this.recommend.type === null) {
         this.zhidaType = true
         this.showType = true
@@ -152,7 +174,36 @@
 
     },
     watch: {
-
+      recommend (val) {
+        if (val.zhida_singer) {
+          this.zhidaSinger = this.recommend.zhida_singer
+          this.showSinger = true
+          this.showMv = false
+          this.showAlbum = false
+          this.showType = false
+        }
+        if (val.zhida_mv) {
+          this.zhidaMv = this.recommend.zhida_mv
+          this.showMv = true
+          this.showSinger = false
+          this.showAlbum = false
+          this.showType = false
+        }
+        if (val.zhida_album) {
+          this.zhidaAlbum = this.recommend.zhida_album
+          this.showAlbum = true
+          this.showMv = false
+          this.showSinger = false
+          this.showType = false
+        }
+        if (val.type === null) {
+          this.zhidaType = true
+          this.showType = true
+          this.showMv = false
+          this.showSinger = false
+          this.showAlbum = false
+        }
+      }
     },
     directives: {}
   }
