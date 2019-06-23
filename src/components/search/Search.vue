@@ -8,7 +8,7 @@
           @search="onSearch"
           @cancel="onCancel"
       ></van-search>
-      <search-list v-if="showList && flag && showValue" :searchList="searchList" :recommend="recommend"></search-list>
+      <search-list v-if="showList && flag && showValue" :searchList="searchList" :recommend="recommend" :searchValue="searchValue"></search-list>
       <div v-else>
         <div class="hot">
           <h3>
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="history" v-if="showHistory">
+        <div class="history" v-if="showHistory && searchArr.length > 0">
           <h3>
             搜索历史
           </h3>
@@ -78,6 +78,7 @@
         searchArr: JSON.parse(localStorage.searchArr),
         showFlag: false, // 是否显示弹框
         showHistory: true, // 是否显示搜索历史
+        searchValue: ''
       }
     },
     methods: {
@@ -94,6 +95,7 @@
         this.$emit('update:showSearch', false)
       },
       handleItem(item) {
+        this.searchValue = item.k
         this.$com.req(`api/getSearchByKey?key=${item.k}`).then(response => {
           let res = response.response.data
           if (res) {
@@ -132,6 +134,7 @@
     watch: {
       'value'(val) {
         if (val !== '') {
+          this.searchValue = val
           let arr = JSON.parse(localStorage.searchArr)
           let obj = {
             k: val
