@@ -43,6 +43,7 @@
       this.$com.req(`api/search?keywords=${this.value}&type=100&limit=10`)
         .then(res => {
           this.singer = res.result.artists
+          this.showLoading = false
           this.singer.map(item => {
             let replaceReg = new RegExp(this.value, 'g')
             let replaceString = '<span class="search-text">' + this.value + '</span>'

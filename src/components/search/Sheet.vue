@@ -23,7 +23,6 @@
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>
-
 </template>
 
 <script>

@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="content">
-      <div class="item" v-for="(item, index) in videos" :key="index">
+      <div class="flex" v-if="videos.length === 0">无结果</div>
+      <div v-else class="item" v-for="(item, index) in videos" :key="index">
         <div class="i-con">
           <div class="img">
             <img :src="item.coverUrl" alt="">
@@ -38,6 +39,7 @@
           </div>
         </div>
       </div>
+
     </div>
     <div class="flex">
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
@@ -68,7 +70,10 @@
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=1014&limit=10`)
         .then(res => {
-          this.videos = res.result.videos
+          this.showLoading = false
+          if (res.result) {
+            this.videos = res.result.videos
+          }
         })
     },
     created() {
