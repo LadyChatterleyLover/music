@@ -41,6 +41,11 @@ export default new Router({
       path: '/listen',
       name: 'listen',
       component: () => import('../pages/listen/Listen')
+    },
+    {
+      path: '/searchList',
+      name: 'searchList',
+      component: () => import('../pages/searchList/SearchList')
     }
   ]
 })

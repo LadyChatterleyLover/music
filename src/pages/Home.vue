@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <search v-if="showSearch" :showSearch.sync="showSearch"></search>
-    <div v-else>
-      <header>
-        <h2>
-          音乐馆
-        </h2>
-        <div class="search">
-          <van-search
+  <div ref="wrapper" class="wrapper">
+    <div class="content">
+      <search v-if="showSearch" :showSearch.sync="showSearch"></search>
+      <div v-else>
+        <header>
+          <h2>
+            音乐馆
+          </h2>
+          <div class="search">
+            <van-search
               class="home__input"
               v-model="searchValue"
               placeholder="搜索"
@@ -15,71 +16,74 @@
               shape="round"
               @search="onSearch"
               @focus="onFocus"
-          >
-            <div slot="action" @click="onSearch" class="icon">
-              <img src="../icons/music2.svg" alt="" width="24" height="24" @click="listen">
+            >
+              <div slot="action" @click="onSearch" class="icon">
+                <img src="../icons/music2.svg" alt="" width="24" height="24" @click="listen">
+              </div>
+            </van-search>
+          </div>
+        </header>
+        <div class="load">
+          <van-loading v-if="showLoading">加载中...</van-loading>
+        </div>
+        <div class="swiper" v-if="!showLoading">
+          <van-swipe :autoplay="3000" indicator-color="white">
+            <van-swipe-item v-for="(item, index) in focus" :key="item.id">
+              <img :src="item.pic" alt="" width="100%">
+            </van-swipe-item>
+          </van-swipe>
+        </div>
+        <div class="nav">
+          <div class="nav-item" @click="goTo('/singer')">
+            <div class="name">
+              每日推荐
             </div>
-          </van-search>
+            <div class="n-icon">
+              <img src="../icons/rili.svg" alt="">
+            </div>
+          </div>
+          <div class="nav-item" @click="goTo('/rank')">
+            <div class="name">
+              歌单
+            </div>
+            <div class="n-icon">
+              <img src="../icons/song.svg" alt="">
+            </div>
+          </div>
+          <div class="nav-item" @click="goTo('/category')">
+            <div class="name">
+              排行榜
+            </div>
+            <div class="n-icon">
+              <img src="../icons/song.svg" alt="">
+            </div>
+          </div>
+          <div class="nav-item" @click="goTo('/radio')">
+            <div class="name">
+              电台
+            </div>
+            <div class="n-icon">
+              <img src="../icons/radio.svg" alt="">
+            </div>
+          </div>
+          <div class="nav-item" @click="goTo('/listen')">
+            <div class="name">
+              直播
+            </div>
+            <div class="n-icon">
+              <img src="../icons/zhibo.svg" alt="">
+            </div>
+          </div>
         </div>
-      </header>
-      <div style="display: flex;justify-content: center;margin-bottom: 10px">
-        <van-loading v-if="showLoading">加载中...</van-loading>
       </div>
-      <div class="swiper" v-if="!showLoading">
-        <van-swipe :autoplay="3000" indicator-color="white">
-          <van-swipe-item v-for="(item, index) in focus" :key="item.id">
-            <img :src="item.pic" alt="" width="100%">
-          </van-swipe-item>
-        </van-swipe>
-      </div>
-      <div class="nav">
-        <div class="nav-item" @click="goTo('/singer')">
-          <div class="name">
-            每日推荐
-          </div>
-          <div class="n-icon">
-            <img src="../icons/rili.svg" alt="">
-          </div>
-        </div>
-        <div class="nav-item" @click="goTo('/rank')">
-          <div class="name">
-            歌单
-          </div>
-          <div class="n-icon">
-            <img src="../icons/song.svg" alt="">
-          </div>
-        </div>
-        <div class="nav-item" @click="goTo('/category')">
-          <div class="name">
-            排行榜
-          </div>
-          <div class="n-icon">
-            <img src="../icons/rank.svg" alt="">
-          </div>
-        </div>
-        <div class="nav-item" @click="goTo('/radio')">
-          <div class="name">
-            电台
-          </div>
-          <div class="n-icon">
-            <img src="../icons/radio.svg" alt="">
-          </div>
-        </div>
-        <div class="nav-item" @click="goTo('/listen')">
-          <div class="name">
-            直播
-          </div>
-          <div class="n-icon">
-            <img src="../icons/zhibo.svg" alt="">
-          </div>
-        </div>
+      <div v-if="!showSearch">
+        <card title="推荐歌单" :content="rankList" desc="歌单广场"></card>
+        <card :title="newList" :content="moreList" desc="更多新碟"></card>
+        <card title="音乐新势力" :content="newMusic" desc="新音乐"></card>
+        <card title="推荐电台" :content="djArr" desc="电台广场"></card>
+        <card title="推荐节目" :content="recommend" desc="更多节目"></card>
       </div>
     </div>
-    <card title="推荐歌单" :content="rankList" desc="歌单广场"></card>
-    <card :title="newList" :content="moreList" desc="更多新碟"></card>
-    <card title="音乐新势力" :content="newMusic" desc="新音乐"></card>
-    <card title="推荐电台" :content="djArr" desc="电台广场"></card>
-    <card title="推荐节目" :content="recommend" desc="更多节目"></card>
   </div>
 
 </template>
@@ -120,34 +124,34 @@
           }
         })
       },
-      getRank () {
+      getRank() {
         this.$com.req('api/personalized').then(res => {
           this.rankList = res.result
         })
       },
-      getAlbum () {
+      getAlbum() {
         this.$com.req('api/album/newest').then(res => {
           this.newAlbum = res.albums
           this.moreList.push(this.newAlbum)
         })
       },
-      getSong () {
+      getSong() {
         this.$com.req('api/top/song?type=7').then(res => {
           this.newSong = res.data
-          this.moreList.push(this.newSong )
+          this.moreList.push(this.newSong)
         })
       },
-      getNewMusic () {
+      getNewMusic() {
         this.$com.req('api/personalized/newsong').then(res => {
           this.newMusic = res.result
         })
       },
-      getDJ () {
+      getDJ() {
         this.$com.req('api/personalized/djprogram').then(res => {
           this.djArr = res.result
         })
       },
-      getRecommend () {
+      getRecommend() {
         this.$com.req('api/program/recommend').then(res => {
           this.recommend = res.programs
         })
@@ -173,9 +177,13 @@
       this.getNewMusic()
       this.getDJ()
       this.getRecommend()
-      // 初始化搜索记录
-      let arr = []
-      localStorage.setItem('searchArr', JSON.stringify(arr))
+      let wrapper = this.$refs.wrapper
+      this.$nextTick(() => {
+        new this.$BScroll(wrapper, {
+          click: true,
+          probeType: 3
+        })
+      })
     },
     created() {
 
@@ -188,6 +196,21 @@
 </script>
 
 <style scoped lang="scss">
+  .wrapper {
+    height: 100vh;
+    overflow: hidden;
+
+    .w-content {
+      height: auto;
+    }
+  }
+
+  .load {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px
+  }
+
   header {
     display: flex;
     align-items: center;

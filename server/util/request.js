@@ -1,4 +1,4 @@
-const encrypt = require('./crypto')
+const encrypt = require('./crypto.js')
 const request = require('request')
 const queryString = require('querystring')
 const PacProxyAgent = require('pac-proxy-agent')

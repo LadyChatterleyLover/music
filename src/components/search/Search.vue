@@ -2,27 +2,17 @@
   <div class="search">
     <div>
       <van-search
-          v-model="value"
-          placeholder="请输入搜索关键词"
-          show-action
-          @search="onSearch"
-          @cancel="onCancel"
-      ></van-search>
-      <search-list v-if="showList && flag && showValue" :searchList="searchList" :recommend="recommend" :searchValue="searchValue"></search-list>
+              v-model="value"
+              placeholder="请输入搜索关键词"
+              show-action
+              @search="onSearch"
+              @cancel="onCancel"
+      >
+        <div slot="action" @click="onSearch" v-if="showValue">搜索</div>
+        <div slot="action" @click="onCancel" v-else>取消</div>
+      </van-search>
+      <search-panel v-if="showPanel" :searchRank="searchRank" :value="value"></search-panel>
       <div v-else>
-        <div class="hot">
-          <h3>
-            热门搜索
-          </h3>
-          <div class="desc">
-            <div v-for="(item, index) in hotKey.slice(0, 12)" :key="item.n" class="item" :class="{active: index === 0}"
-                 @click="handleItem(item)">
-              <div class="name">
-                {{item.k}}
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="history" v-if="showHistory && searchArr.length > 0">
           <h3>
             搜索历史
@@ -30,7 +20,7 @@
           <div class="desc">
             <div v-for="(item, index) in searchArr" :key="index" class="item" @click="handleItem(item)">
               <div class="name">
-                {{item.k}}
+                {{item.name}}
               </div>
             </div>
             <div class="d-icon" @click="clearHistory">
@@ -38,28 +28,48 @@
             </div>
           </div>
         </div>
+        <div class="hot">
+          <h3>
+            热搜榜
+          </h3>
+          <div class="h-desc">
+            <div class="h-item" v-for="(item, index) in hots" :key="index" @click="searchItem(item)">
+              <div class="index" :class="{hotIndex: index < 3}">
+                {{index + 1}}
+              </div>
+              <div class="name">
+                <div>
+                  {{item.first}}
+                </div>
+              </div>
+              <div class="h-hot" v-if="index < 2">
+                hot
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <van-dialog
-        v-model="showFlag"
-        show-cancel-button
-        @confirm="confirm"
+            v-model="showFlag"
+            show-cancel-button
+            @confirm="confirm"
     >
-     <div class="dialog">
-       是否确认清空搜索历史？
-     </div>
+      <div class="dialog">
+        是否确认清空搜索历史？
+      </div>
     </van-dialog>
   </div>
 
 </template>
 
 <script>
-  import searchList from './SearchList'
+  import searchPanel from './SearchPanel'
 
   export default {
     name: "Search",
     components: {
-      searchList
+      searchPanel
     },
     props: {
       showSearch: {
@@ -69,7 +79,7 @@
     data() {
       return {
         value: '',
-        hotKey: [], // 搜索热词
+        hots: [], // 热搜
         showList: false,
         searchList: [],
         recommend: {},
@@ -78,53 +88,68 @@
         searchArr: JSON.parse(localStorage.searchArr),
         showFlag: false, // 是否显示弹框
         showHistory: true, // 是否显示搜索历史
-        searchValue: ''
+        searchValue: '',
+        showPanel: false,
+        searchRank: [], // 搜索建议
+        searchSongs: [], // 搜索结果
       }
     },
     methods: {
-      getHotKey() {
-        this.$com.req('api/getHotkey').then(response => {
-          let res = response.response.data
-          this.hotKey = res.hotkey
+      getHots() {
+        this.$com.req('api/search/hot').then(res => {
+          this.hots = res.result.hots
         })
       },
+      searchItem(item) {
+        this.$com.req(`api/search?keywords=${item.first}`)
+          .then(res => {
+            this.searchSongs = res.result.songs
+            this.$router.push({name: 'searchList', params: {searchSongs: this.searchSongs, searchValue: item.first}})
+          })
+        let obj = {
+          name: item.first
+        }
+        let arr = JSON.parse(localStorage.searchArr)
+        arr.push(obj)
+        arr = this.$lodash.unionBy(arr, 'name')
+        localStorage.setItem('searchArr', JSON.stringify(arr))
+      },
       onSearch() {
-
+        this.$com.req(`api/search?keywords=${this.value}`)
+          .then(res => {
+            this.searchSongs = res.result.songs
+            this.$router.push({name: 'searchList', params: {searchSongs: this.searchSongs, searchValue:this.searchValue}})
+          })
+        let obj = {
+          name: this.value
+        }
+        let arr = JSON.parse(localStorage.searchArr)
+        arr.push(obj)
+        arr = this.$lodash.unionBy(arr, 'name')
+        localStorage.setItem('searchArr', JSON.stringify(arr))
       },
       onCancel() {
         this.$emit('update:showSearch', false)
       },
-      handleItem(item) {
-        this.searchValue = item.k
-        this.$com.req(`api/getSearchByKey?key=${item.k}`).then(response => {
-          let res = response.response.data
-          if (res) {
-            this.searchList = res.song.list
-            this.recommend = res.zhida
-            this.showList = true
-            this.flag = true
-            this.showValue = true
-          }
-        })
-        let arr = JSON.parse(localStorage.searchArr)
-        let obj = {
-          k: item.k
-        }
-        arr.push(obj)
-        arr = this.$lodash.unionBy(arr, 'k')
-        localStorage.setItem('searchArr', JSON.stringify(arr))
-      },
-      clearHistory () {
+      clearHistory() {
         this.showFlag = true
       },
-      confirm () {
+      confirm() {
         this.showHistory = false
         let arr = []
         localStorage.setItem('searchArr', JSON.stringify(arr))
+      },
+      handleItem(item) {
+        this.$com.req(`api/search?keywords=${item.name}&limit=10`)
+          .then(res => {
+            this.searchSongs = res.result.songs
+            this.$router.push({name: 'searchList', params:
+                {searchSongs: this.searchSongs, searchValue: item.name}})
+          })
       }
     },
     mounted() {
-      this.getHotKey()
+      this.getHots()
     },
     created() {
 
@@ -135,26 +160,17 @@
       'value'(val) {
         if (val !== '') {
           this.searchValue = val
-          let arr = JSON.parse(localStorage.searchArr)
-          let obj = {
-            k: val
-          }
-          arr.push(obj)
-          localStorage.setItem('searchArr', JSON.stringify(arr))
-          this.showList = true
-          this.$com.req(`api/getSearchByKey?key=${val}`).then(response => {
-            let res = response.response.data
-            if (res) {
-              this.searchList = res.song.list
-              this.recommend = res.zhida
-              this.showList = true
-              this.flag = true
-              this.value = val
-              this.showValue = true
-            }
-          })
+          this.showValue = true
+          this.$com.req(`api/search/suggest?keywords=${val}&type=mobile`)
+            .then(res => {
+              if (res) {
+                this.searchRank = res.result.allMatch
+                this.showPanel = true
+              }
+            })
         } else {
           this.showValue = false
+          this.showPanel = false
         }
       }
     },
@@ -164,11 +180,11 @@
 
 <style scoped lang="scss">
   .search {
-    background: #f8f8f8;
-
     .hot, .history {
       h3 {
-        margin: 20px;
+        margin: 30px;
+        position: relative;
+        top: 20px;
       }
 
       .desc {
@@ -179,9 +195,11 @@
         padding-left: 30px;
         flex-wrap: wrap;
         position: relative;
+
         .item {
-          /*width: 23%;*/
+          /*width: 30%;*/
           margin: 10px;
+          text-align: center;
 
           .name {
             padding: 10px 20px;
@@ -189,21 +207,59 @@
             background: #fff;
           }
         }
+
         .d-icon {
           position: absolute;
-          top: 16px;
+          top: -46px;
           right: 60px;
         }
       }
     }
   }
+
   .dialog {
     height: 100px;
     line-height: 100px;
     text-align: center;
   }
+
   .active {
     $color: #31c27c;
     color: $color;
+  }
+
+  .hotIndex {
+    color: #C10D0D;
+    font-size: 28px;
+  }
+  .history {
+    background: #f9f9f9;
+    .desc {
+      .name {
+
+      }
+    }
+  }
+  .h-desc {
+    .h-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0 30px 10px;
+
+      .index {
+        margin-right: 20px;
+        margin-left: 30px;
+      }
+
+      .name {
+        margin-right: 20px;
+      }
+
+      .h-hot {
+        font-style: italic;
+        color: #c10d0d;
+        font-size: 32px;
+      }
+    }
   }
 </style>

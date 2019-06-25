@@ -9,6 +9,7 @@ import 'vant/lib/index.css';
 import 'lib-flexible';
 import axios from 'axios'
 import lodash from 'lodash'
+import BScroll from 'better-scroll';
 
 
 
@@ -24,6 +25,7 @@ axios.interceptors.response.use(
 Vue.use(Vant);
 
 
+Vue.prototype.$BScroll = BScroll;
 Vue.prototype.$lodash = lodash
 Vue.prototype.$com = http
 Vue.prototype.$moment = moment

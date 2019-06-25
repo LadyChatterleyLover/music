@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "apicache": "^1.4.0",
-    "body-parser": "^1.19.0",
+    "data-uri-to-buffer": "^2.0.1",
     "express": "^4.16.4",
     "pac-proxy-agent": "^3.0.0",
     "request": "^2.88.0"
