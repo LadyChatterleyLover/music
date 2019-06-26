@@ -2,7 +2,7 @@
   <div>
     <div ref="wrapper" class="wrapper">
       <div class="w-content" :class="{pad: active !== 0}">
-        <div class="item" v-for="(item, index) in list" :key="index">
+        <div class="item" v-for="(item, index) in list" :key="index" @click="goToDetail(item)">
           <div class="img">
             <img :src="item.picUrl" alt="">
           </div>
@@ -77,6 +77,9 @@
               this.$emit('update:list', res.artists)
             })
         }
+      },
+      goToDetail(item) {
+        this.$router.push({name: 'singerDetail', params: {item: item}})
       },
       getMoreData () {
         this.$com.req(`api/artist/list?cat=${this.cat}&limit=${this.limit}&offset=${this.offset*this.limit}`)

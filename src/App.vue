@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive include="Singer">
+      <router-view></router-view>
+    </keep-alive>
     <tabbar v-if="$route.meta.showFooter"></tabbar>
   </div>
 </template>
@@ -18,6 +20,9 @@
         let arr = []
         localStorage.setItem('searchArr', JSON.stringify(arr))
       }
+    },
+    activated () {
+      console.log(111)
     }
   }
 </script>

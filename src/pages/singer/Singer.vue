@@ -132,7 +132,7 @@
     filters: {},
     computed: {},
     watch: {},
-    directives: {}
+    directives: {},
   }
 </script>
 

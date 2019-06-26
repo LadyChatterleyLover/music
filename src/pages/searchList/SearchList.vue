@@ -44,7 +44,7 @@
             <album :value="value" :moreAlbums="moreAlbums"></album>
           </van-tab>
           <van-tab title="歌手">
-            <singer :value="value" :moreSinggers="moreSinggers"></singer>
+            <singer :value="value" :moreSingers="moreSingers"></singer>
           </van-tab>
           <van-tab title="歌单">
             <sheet :value="value" :moreSheets="moreSheets"></sheet>
@@ -67,7 +67,7 @@
 
 <script>
   import album from '../../components/search/Album'
-  import singer from '../../components/search/Singger'
+  import singer from '../../components/search/Singer'
   import sheet from '../../components/search/Sheet'
   import user from '../../components/search/Users'
   import mv from '../../components/search/Videos'
@@ -93,7 +93,7 @@
         limit: 10, // 每页多少条数据
         showLoading: true,
         moreAlbums: [], // 更多专辑
-        moreSinggers: [], //更多歌手
+        moreSingers: [], //更多歌手
         moreSheets: [], // 更多歌单
         moreUsers: [], // 更多用户
         moreVideos: [], // 更多mv
@@ -134,7 +134,7 @@
             }
           })
       },
-      getMoreSingger () {
+      getMoreSingers () {
         this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=100`)
           .then(res => {
             let result = res.result.artists
@@ -142,7 +142,7 @@
               this.showLoading = false
               this.offset ++
               result.map((item => {
-                this.moreSinggers.push(item)
+                this.moreSingers.push(item)
                 this.scroll.finishPullUp()
                 this.scroll.refresh()
               }))
@@ -222,7 +222,7 @@
             this.getMoreAlbums()
           }
           if (this.active === 2) {
-            this.getMoreSingger()
+            this.getMoreSingers()
           }
           if (this.active === 3) {
             this.getMoreSheets()
