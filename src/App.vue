@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <keep-alive include="Singer">
-      <router-view></router-view>
-    </keep-alive>
+    <div>
+      <keep-alive include="Singer">
+        <router-view></router-view>
+      </keep-alive>
+    </div>
     <tabbar v-if="$route.meta.showFooter"></tabbar>
   </div>
 </template>

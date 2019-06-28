@@ -25,7 +25,7 @@
             <div class="c-name">
               {{item.name}}
             </div>
-            <div class="al">
+            <div class="al" @click="goToPlay(item)">
               <div v-for="(item1, index1) in item.ar" :key="index1" class="a-name">
                 {{item1.name}} <span v-if="index1 !== item.ar.length - 1">/</span>
                 <span v-if="index1 === item.ar.length - 1">·&nbsp;</span>
@@ -51,17 +51,20 @@
     props: {},
     data() {
       return {
-        detailItem: {},
         songs: []
       }
     },
     methods: {
       back () {
         this.$router.back()
-      }
+      },
+      goToPlay(item) {
+        console.log(item)
+        this.$router.push({name: 'player', params: {item: item}})
+      },
+
     },
     mounted() {
-      this.detailItem = this.$route.params.item
       this.$com.req(`api/artists?id=${this.detailItem.id}`).then(res => {
         this.songs = res.hotSongs
       })
@@ -76,7 +79,11 @@
 
     },
     filters: {},
-    computed: {},
+    computed: {
+      detailItem () {
+        return this.$store.state.detailItem
+      }
+    },
     watch: {},
     directives: {}
   }

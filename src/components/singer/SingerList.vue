@@ -79,7 +79,9 @@
         }
       },
       goToDetail(item) {
-        this.$router.push({name: 'singerDetail', params: {item: item}})
+        console.log(item)
+        this.$store.state.detailItem = item
+        this.$router.push({name: 'singerDetail'})
       },
       getMoreData () {
         this.$com.req(`api/artist/list?cat=${this.cat}&limit=${this.limit}&offset=${this.offset*this.limit}`)
