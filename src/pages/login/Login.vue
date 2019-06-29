@@ -101,8 +101,7 @@
               }
 
             }).catch(err => {
-          console.log(err)
-          if (JSON.stringify(err).includes('50')) {
+          if (err) {
               this.$toast.fail('账号或密码错误')
           }
         })
@@ -128,7 +127,7 @@
 
             }).catch(err => {
           console.log(err)
-          if (JSON.stringify(err).includes('50')) {
+          if (err) {
             this.$toast.fail('账号或密码错误')
           }
         })
