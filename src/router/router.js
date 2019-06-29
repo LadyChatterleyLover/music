@@ -37,6 +37,14 @@ export default new Router({
       component: () => import('../pages/singer/SingerDetail')
     },
     {
+      path: '/edit',
+      name: 'edit',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/me/Edit')
+    },
+    {
       path: '/player',
       name: 'player',
       meta: {

@@ -24,7 +24,7 @@
     },
     mounted() {
       // 初始化搜索记录
-      if (JSON.parse(localStorage.searchArr.length === 0)) {
+      if (!localStorage.searchArr) {
         let arr = []
         localStorage.setItem('searchArr', JSON.stringify(arr))
       }

@@ -30,6 +30,7 @@
           </div>
           <div class="btn">
             <van-button type="danger" @click="phoneLogin">立即登录</van-button>
+            <van-button type="warning"  @click="register">立即注册</van-button>
           </div>
         </van-tab>
         <van-tab title="邮箱登录">
@@ -57,6 +58,7 @@
           </div>
           <div class="btn">
             <van-button type="danger" @click="emailLogin">立即登录</van-button>
+            <van-button type="warning"  @click="register">立即注册</van-button>
           </div>
         </van-tab>
       </van-tabs>
@@ -73,7 +75,7 @@
     data() {
       return {
         user: {},
-        active: 1,
+        active: 0,
         phone: '',
         password: '',
         email: '',
@@ -95,6 +97,7 @@
               if (res) {
                 let user = res.profile
                 localStorage.setItem('user', JSON.stringify(user))
+                localStorage.setItem('userId', user.userId)
                 this.$store.state.user = user
                 this.$router.push('/me')
                 this.$toast.success('登录成功')
@@ -120,6 +123,7 @@
               if (res) {
                 let user = res.profile
                 localStorage.setItem('user', JSON.stringify(user))
+                localStorage.setItem('userId', user.userId)
                 this.$store.state.user = user
                 this.$router.push('/me')
                 this.$toast.success('登录成功')
@@ -131,6 +135,9 @@
             this.$toast.fail('账号或密码错误')
           }
         })
+      },
+      register () {
+        this.$router.push('/register')
       }
     },
     mounted() {
@@ -165,7 +172,7 @@
 
     .btn {
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       margin-top: 100px;
     }
   }

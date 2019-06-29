@@ -13,12 +13,12 @@
         </div>
       </div>
     </div>
-    <div class="i-con">
+    <div class="i-con" v-if="changeIndex === 0">
       <div class="img">
         <img :src="alPic" alt="" :class="{pause: isPlay === false }">
       </div>
     </div>
-
+    <lyric-l :lyricL="lyricL" v-if="changeIndex === 1"></lyric-l>
     <div class="slider">
       <div class="start">
         {{start}}
@@ -33,6 +33,10 @@
       <div class="duration">
         {{duration}}
       </div>
+    </div>
+    <div class="change">
+      <div class="c-item" :class="{changeActive: changeIndex === 0}" @click="changeIndex = 0"></div>
+      <div class="c-item" :class="{changeActive: changeIndex === 1}" @click="changeIndex = 1"></div>
     </div>
     <div class="audio">
       <audio :src="url" autoplay ref="audio" @canplay="getDuration" @timeupdate="updateTime"></audio>
@@ -58,14 +62,18 @@
         <van-icon name="like" size="30px" color="#fff" v-else></van-icon>
       </div>
     </div>
+
   </div>
 
 </template>
 
 <script>
+  import lyricL from './LyricL'
   export default {
     name: "Player",
-    components: {},
+    components: {
+      lyricL
+    },
     props: {},
     data() {
       return {
@@ -81,6 +89,8 @@
         isCollection: false, // 是否收藏
         loop: 1, // 播放模式 1代表顺序播放 2代表单曲循环 3代表随机播放
         isFoot: false, // 是否缩放到底部
+        lyricL: '', // 歌词
+        changeIndex: 0
       }
     },
     methods: {
@@ -201,6 +211,7 @@
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
+          this.getLyric()
         }
       },
       // 下一首
@@ -212,7 +223,20 @@
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
+          this.getLyric()
         }
+      },
+      // 获取歌词
+      getLyric () {
+        this.$com.req(`api/lyric?id=${this.song.id}`).then(res => {
+          let arr = this.$lodash.split(res.lrc.lyric, ']')
+          let arr1 = []
+          arr.map(item => {
+            item = this.$lodash.replace(item, '[', '')
+            arr1.push(item)
+          })
+          console.log(arr1)
+        })
       }
     },
     mounted() {
@@ -221,6 +245,7 @@
       this.songs = this.$route.params.songs
       this.getSongUrl()
       this.getAlPic()
+      this.getLyric()
     },
     created() {
 
@@ -324,15 +349,31 @@
       }
     }
 
+    .change {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      top: 80px;
+      .c-item {
+        width: 50px;
+        height: 10px;
+        background: #fff;
+        border-radius: 14px;
+        margin-left: 20px;
+      }
+    }
+
     .audio {
-      margin-top: 140px;
+      margin-top: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .play {
-      margin-top: 200px;
+      margin-top: 160px;
       display: flex;
       align-items: center;
       justify-content: space-around;
@@ -352,5 +393,8 @@
         height: 100px;
       }
     }
+  }
+  .changeActive {
+    height: 15px !important;
   }
 </style>

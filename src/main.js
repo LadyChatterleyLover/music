@@ -4,17 +4,18 @@ import router from './router/router'
 import store from './store/index'
 import http from './http'
 import moment from 'dayjs'
-import Vant from 'vant';
-import 'vant/lib/index.css';
-import 'lib-flexible';
+import Vant from 'vant'
+import 'vant/lib/index.css'
+import 'lib-flexible'
 import axios from 'axios'
 import lodash from 'lodash'
-import BScroll from 'better-scroll';
+import BScroll from 'better-scroll'
 
 
 
 axios.defaults.timeout = 10000
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.withCredentials = true
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencodedcharset=UTF-8'
 axios.interceptors.response.use(
     response => {
       return response.data
@@ -22,10 +23,10 @@ axios.interceptors.response.use(
       return Promise.reject(error)
     })
 
-Vue.use(Vant);
+Vue.use(Vant)
 
 
-Vue.prototype.$BScroll = BScroll;
+Vue.prototype.$BScroll = BScroll
 Vue.prototype.$lodash = lodash
 Vue.prototype.$com = http
 Vue.prototype.$moment = moment
