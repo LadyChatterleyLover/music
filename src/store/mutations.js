@@ -1,24 +1,15 @@
-import types from './mutation-types'
+import {SET_CURRENTTIME, SET_SLIDER, SET_CURRENTINDEX, SET_PLAYFLAG} from './mutation-types'
 export default {
-  [types.SET_SINGER] (state, data) {
-    state.singer = data
+  [SET_CURRENTTIME] (state, data) {
+    state.currentTime = data
   },
-  [types.SET_PLAYING_STATE] (state, data) {
-    state.playing = data
-  },
-  [types.SET_FULL_SCREEN] (state, data) {
-    state.fullScreen = data
-  },
-  [types.SET_PLAYING] (state, data) {
-    state.playList = data
-  },
-  [types.SET_SEQUENCE_LIST] (state, data) {
-    state.sequenceList = data
-  },
-  [types.SET_PLAY_MODE] (state, data) {
-    state.mode = data
-  },
-  [types.SET_CURRENT_INDEX] (state, data) {
+  [SET_CURRENTINDEX] (state, data) {
     state.currentIndex = data
+  },
+  [SET_SLIDER] (state, data) {
+    state.slider = data
+  },
+  [SET_PLAYFLAG] (state, data) {
+    state.playFlag = data
   }
 }

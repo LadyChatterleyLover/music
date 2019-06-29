@@ -13,9 +13,6 @@
         </div>
       </div>
     </div>
-    <div class="flex">
-      到底啦！！！
-    </div>
   </div>
 
 </template>

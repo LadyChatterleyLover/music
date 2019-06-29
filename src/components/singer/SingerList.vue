@@ -79,7 +79,6 @@
         }
       },
       goToDetail(item) {
-        console.log(item)
         this.$store.state.detailItem = item
         this.$router.push({name: 'singerDetail'})
       },

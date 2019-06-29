@@ -1,9 +1,4 @@
-export default {
-    SET_SINGER: 'SET_SINGER',
-    SET_PLAYING_STATE: 'SET_PLAYING_STATE',
-    SET_FULL_SCREEN: 'SET_FULL_SCREEN',
-    SET_PLAYLIST: 'SET_PLAYLIST',
-    SET_SEQUENCE_LIST: 'SET_SEQUENCE_LIST',
-    SET_PLAY_MODE: 'SET_PLAY_MODE',
-    SET_CURRENT_INDEX: 'SET_CURRENT_INDEX'
-}
+export const SET_CURRENTTIME = 'set_currentTime'
+export const SET_CURRENTINDEX = 'set_currentIndex'
+export const SET_SLIDER = 'set_slider'
+export const SET_PLAYFLAG = 'set_playFlag'

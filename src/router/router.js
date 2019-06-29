@@ -45,6 +45,14 @@ export default new Router({
       component: () => import('../pages/player/Player')
     },
     {
+      path: '/playerFooter',
+      name: 'playerFooter',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/playerFooter/PlayerFooter')
+    },
+    {
       path: '/rank',
       name: 'rank',
       meta: {
@@ -91,6 +99,22 @@ export default new Router({
         showFooter: true
       },
       component: () => import('../pages/me/Me')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      meta: {
+        showFooter: true
+      },
+      component: () => import('../pages/login/Login')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      meta: {
+        showFooter: true
+      },
+      component: () => import('../pages/register/Register')
     },
   ]
 })
