@@ -47,7 +47,7 @@
         <img src="../../icons/pre.svg" alt="">
       </div>
       <div class="p-item p-play" @click="pause(isPlay)">
-        <img src="../../icons/pause.svg" alt="" v-if="playFlag">
+        <img src="../../icons/pause.svg" alt="" v-if="isPlay">
         <img src="../../icons/play.svg" alt="" v-else>
       </div>
       <div class="p-item" @click="nextSong">
@@ -58,14 +58,6 @@
         <van-icon name="like" size="30px" color="#fff" v-else></van-icon>
       </div>
     </div>
-    <van-dialog
-        v-model="showDialog"
-        message="只有登录过后才能收藏喔"
-        cancel-button-text="继续浏览"
-        confirm-button-text="前往登录"
-        show-cancel-button
-        @confirm="confirm"
-    ></van-dialog>
   </div>
 
 </template>
@@ -81,31 +73,28 @@
         currentIndex: 0,
         songs: [],
         url: '',
+        slider: 0,
         start: '0:00',
-        duration: 0, // 播放时长
+        duration: 0,
         alPic: '', // 专辑封面
         isPlay: true, // 是否播放
         isCollection: false, // 是否收藏
         loop: 1, // 播放模式 1代表顺序播放 2代表单曲循环 3代表随机播放
-        showDialog: false
+        isFoot: false, // 是否缩放到底部
       }
     },
     methods: {
       back() {
         this.$router.back()
-        this.$store.state.isFoot = true
-        this.$store.commit('set_currentIndex', this.currentIndex)
       },
       getSongUrl() {
         this.$com.req(`api/song/url?id=${this.song.id}`)
             .then(res => {
               this.url = res.data[0].url
-              this.$store.state.songUrl = res.data[0].url
             })
       },
       pause(isPlay) {
         this.isPlay = !this.isPlay
-        this.$store.commit('set_playFlag', this.isPlay)
         if (isPlay) {
           this.$refs.audio.pause()
         } else {
@@ -113,12 +102,7 @@
         }
       },
       collection(isCollection) {
-        let user = localStorage.user
-        if (!user) {
-          this.showDialog = true
-        } else {
-          this.isCollection = !this.isCollection
-        }
+        this.isCollection = !this.isCollection
       },
       changeLoop() {
         this.loop++
@@ -135,7 +119,6 @@
       },
       // 切换滑块
       changeSlider(val) {
-        this.$store.commit('set_slider', val)
         let duration = this.$refs.audio.duration
         this.$refs.audio.currentTime = duration * (val / 100)
         if (val === 100) {
@@ -160,10 +143,8 @@
       },
       // 获取专辑封面
       getAlPic() {
-        console.log(this.$store.state.song)
-        this.$com.req(`api/album?id=${this.$store.state.song.al.id}`).then(res => {
+        this.$com.req(`api/album?id=${this.song.al.id}`).then(res => {
           this.alPic = res.album.picUrl
-          this.$store.state.alPic = res.album.picUrl
         })
       },
       // 获取音频时长
@@ -174,14 +155,10 @@
         let s = (duration % 60).toFixed(0)
         if (s < 10) s = '0' + s
         this.duration = `${m}:${s}`
-        this.$store.state.duration = duration
       },
       updateTime(e) {
         let currentTime = e.target.currentTime.toFixed(0)
-        this.$store.state.currentTime = currentTime
-        if (e.target.currentTime > 0) {
-          this.$store.commit('set_slider', (e.target.currentTime / this.$store.state.duration) * 100)
-        }
+        this.slider = (e.target.currentTime / this.$refs.audio.duration) * 100
         if (currentTime < 10) {
           this.start = '0:0' + currentTime
         }
@@ -195,7 +172,7 @@
           if (s < 10) s = '0' + s
           this.start = `${m}:${s}`
         }
-        if (e.target.currentTime === this.$store.state.duration) {
+        if (e.target.currentTime === this.$refs.audio.duration) {
           if (this.loop === 1) {
             this.currentIndex ++
             this.song = this.songs[this.currentIndex]
@@ -221,7 +198,6 @@
           this.$toast('已经是第一首啦')
         } else {
           this.currentIndex --
-          this.isPlay = true
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
@@ -232,27 +208,19 @@
         if (this.currentIndex === this.songs.length - 1) {
           this.$toast('已经是最后一首啦')
         } else {
-          this.isPlay = true
           this.currentIndex ++
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
         }
-      },
-      confirm () {
-        this.$router.push('/login')
       }
     },
     mounted() {
       this.song = this.$route.params.item
-      this.$store.state.song = this.$route.params.item
-      this.currentIndex = this.$store.state.currentIndex
+      this.currentIndex = this.$route.params.index
       this.songs = this.$route.params.songs
-      this.$store.state.songs = this.$route.params.songs
       this.getSongUrl()
       this.getAlPic()
-      this.$refs.audio.currentTime = this.currentTime
-      console.log(this.currentIndex)
     },
     created() {
 
@@ -265,25 +233,9 @@
     computed: {
       detailItem() {
         return this.$store.state.detailItem
-      },
-      currentTime () {
-        return this.$store.state.currentTime
-      },
-      slider: {
-        get () {
-          return this.$store.state.slider
-        },
-        set (val) {
-
-        },
-      },
-      playFlag () {
-        return this.$store.state.playFlag
       }
     },
-    watch: {
-
-    },
+    watch: {},
     directives: {}
   }
 </script>
@@ -360,7 +312,7 @@
 
     .slider {
       position: relative;
-      top: 250px;
+      top: 200px;
       display: flex;
       align-items: center;
       justify-content: space-around;

@@ -5,9 +5,9 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-    <div class="foot" v-if="$store.state.isFoot && $route.path !== 'player'">
-      <player-footer ></player-footer>
-    </div>
+<!--    <div class="foot" v-if="$store.state.isFoot && $route.path !== 'player'">-->
+<!--      <player-footer ></player-footer>-->
+<!--    </div>-->
     <tabbar v-if="$route.meta.showFooter"></tabbar>
   </div>
 </template>

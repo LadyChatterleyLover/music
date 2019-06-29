@@ -1,45 +1,45 @@
 <template>
   <div class="container" >
-      <div class="top">
-        <div class="icon" @click="back">
-          <van-icon name="arrow-left" size="20px"></van-icon>
+    <div class="top">
+      <div class="icon" @click="back">
+        <van-icon name="arrow-left" size="20px"></van-icon>
+      </div>
+      <div class="name">
+        {{detailItem.name}}
+      </div>
+    </div>
+    <div class="img">
+      <img :src="detailItem.picUrl" alt="">
+      <div class="play">
+        <div class="p-icon">
+          <van-icon name="play-circle-o" size="16px"></van-icon>
         </div>
-        <div class="name">
-          {{detailItem.name}}
+        <div class="p-desc" @click="playAll">
+          随机播放全部
         </div>
       </div>
-      <div class="img">
-        <img :src="detailItem.picUrl" alt="">
-        <div class="play">
-          <div class="p-icon">
-            <van-icon name="play-circle-o" size="16px"></van-icon>
+    </div>
+    <div class="content" ref="wrapper">
+      <div class="w-content">
+        <div class="c-item" v-for="(item, index) in songs" :key="index">
+          <div class="c-name">
+            {{item.name}}
           </div>
-          <div class="p-desc" @click="playAll">
-            随机播放全部
+          <div class="al" @click="goToPlay(item, index)">
+            <div v-for="(item1, index1) in item.ar" :key="index1" class="a-name">
+              {{item1.name}} <span v-if="index1 !== item.ar.length - 1">/</span>
+              <span v-if="index1 === item.ar.length - 1">·&nbsp;</span>
+            </div>
+            <div class="al-name">
+              {{item.al.name}}
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="content" ref="wrapper">
-        <div class="w-content">
-          <div class="c-item" v-for="(item, index) in songs" :key="index">
-            <div class="c-name">
-              {{item.name}}
-            </div>
-            <div class="al" @click="goToPlay(item, index)">
-              <div v-for="(item1, index1) in item.ar" :key="index1" class="a-name">
-                {{item1.name}} <span v-if="index1 !== item.ar.length - 1">/</span>
-                <span v-if="index1 === item.ar.length - 1">·&nbsp;</span>
-              </div>
-              <div class="al-name">
-                {{item.al.name}}
-              </div>
-            </div>
-            <div class="c-icon">
-              <van-icon name="play-circle-o" size="18px"></van-icon>
-            </div>
+          <div class="c-icon">
+            <van-icon name="play-circle-o" size="18px"></van-icon>
           </div>
         </div>
       </div>
+    </div>
   </div>
 
 </template>
@@ -59,12 +59,10 @@
         this.$router.back()
       },
       goToPlay(item, index) {
-        this.$store.commit('set_currentIndex', index)
         this.$router.push({name: 'player', params: {item: item,index: index, songs: this.songs}})
       },
       playAll () {
         let index = parseInt(Math.random() * this.songs.length)
-        this.$store.state.currentIndex = index
         let item = this.songs[index]
         this.$router.push({name: 'player', params: {item: item,index: index, songs: this.songs}})
       }
