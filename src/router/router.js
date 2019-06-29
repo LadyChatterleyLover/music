@@ -104,7 +104,7 @@ export default new Router({
       path: '/login',
       name: 'login',
       meta: {
-        showFooter: true
+        showFooter: false
       },
       component: () => import('../pages/login/Login')
     },
@@ -112,7 +112,7 @@ export default new Router({
       path: '/register',
       name: 'register',
       meta: {
-        showFooter: true
+        showFooter: false
       },
       component: () => import('../pages/register/Register')
     },

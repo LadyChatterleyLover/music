@@ -9,4 +9,5 @@ export default  {
   currentTime:0, // 当前播放时间
   duration: 0, // 当前歌曲时长
   slider: 0, // 当前歌曲进度条
+  user: {}
 }
