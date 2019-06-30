@@ -5,9 +5,6 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-<!--    <div class="foot" v-if="$store.state.isFoot && $route.path !== 'player'">-->
-<!--      <player-footer ></player-footer>-->
-<!--    </div>-->
     <tabbar v-if="$route.meta.showFooter"></tabbar>
   </div>
 </template>
@@ -34,15 +31,10 @@
 
 <style lang="scss">
   @import "./styles/common";
-
+  .body,.html {
+    height: 100vh;
+  }
   .search-text {
     color: skyblue !important;
-  }
-
-  .foot {
-    width: 100%;
-    position: fixed;
-    bottom: 0px;
-    z-index: 999;
   }
 </style>

@@ -8,8 +8,16 @@
         <div class="songName">
           {{song.name}}
         </div>
-        <div class="name">
+        <div class="name" v-if="!Array.isArray(detailItem.name)">
           {{detailItem.name}}
+        </div>
+        <div class="flex">
+          <div class="name" v-if="Array.isArray(detailItem.name)" v-for="(item3, index3) in detailItem.name" :key="index3">
+            <div class="n-item">
+              {{item3.name}} <span v-if="index3 !== detailItem.name.length - 1">-</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -100,6 +108,7 @@
       getSongUrl() {
         this.$com.req(`api/song/url?id=${this.song.id}`)
             .then(res => {
+              console.log(res)
               this.url = res.data[0].url
             })
       },
@@ -159,16 +168,18 @@
       },
       // 获取音频时长
       getDuration() {
-        let duration = this.$refs.audio.duration
-        let m = (duration / 60).toString().substr(0, 1)
-        if (m < 10) m = '0' + m
-        let s = (duration % 60).toFixed(0)
-        if (s < 10) s = '0' + s
-        this.duration = `${m}:${s}`
+        if (this.$refs.audio.duration) {
+          let duration = this.$refs.audio.duration
+          let m = (duration / 60).toString().substr(0, 1)
+          if (m < 10) m = '0' + m
+          let s = (duration % 60).toFixed(0)
+          if (s < 10) s = '0' + s
+          this.duration = `${m}:${s}`
+        }
       },
       updateTime(e) {
         let currentTime = e.target.currentTime.toFixed(0)
-        this.slider = (e.target.currentTime / this.$refs.audio.duration) * 100
+        if (this.$refs.audio) this.slider = (e.target.currentTime / this.$refs.audio.duration) * 100
         if (currentTime < 10) {
           this.start = '0:0' + currentTime
         }
@@ -182,7 +193,7 @@
           if (s < 10) s = '0' + s
           this.start = `${m}:${s}`
         }
-        if (e.target.currentTime === this.$refs.audio.duration) {
+        if (this.$refs.audio && e.target.currentTime === this.$refs.audio.duration) {
           if (this.loop === 1) {
             this.currentIndex ++
             this.song = this.songs[this.currentIndex]
@@ -235,7 +246,7 @@
             item = this.$lodash.replace(item, '[', '')
             arr1.push(item)
           })
-          console.log(arr1)
+          // console.log(arr1)
         })
       }
     },
@@ -278,7 +289,14 @@
   .pause {
     animation-play-state: paused !important;
   }
-
+  .flex {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   .container {
     height: 100vh;
     background: rgba(0, 0, 0, .3);
@@ -310,6 +328,9 @@
           width: 100%;
           color: #ccc;
           font-size: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
     }

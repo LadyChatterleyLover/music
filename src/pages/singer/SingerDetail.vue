@@ -22,20 +22,25 @@
     <div class="content" ref="wrapper">
       <div class="w-content">
         <div class="c-item" v-for="(item, index) in songs" :key="index">
-          <div class="c-name">
-            {{item.name}}
+          <div class="index">
+            {{index+ 1}}
           </div>
-          <div class="al" @click="goToPlay(item, index)">
-            <div v-for="(item1, index1) in item.ar" :key="index1" class="a-name">
-              {{item1.name}} <span v-if="index1 !== item.ar.length - 1">/</span>
-              <span v-if="index1 === item.ar.length - 1">·&nbsp;</span>
+          <div class="con">
+            <div class="c-name">
+              {{item.name}}
             </div>
-            <div class="al-name">
-              {{item.al.name}}
+            <div class="al" @click="goToPlay(item, index)">
+              <div v-for="(item1, index1) in item.ar" :key="index1" class="a-name">
+                {{item1.name}} <span v-if="index1 !== item.ar.length - 1">/</span>
+                <span v-if="index1 === item.ar.length - 1">·&nbsp;</span>
+              </div>
+              <div class="al-name">
+                {{item.al.name}}
+              </div>
             </div>
-          </div>
-          <div class="c-icon">
-            <van-icon name="play-circle-o" size="18px"></van-icon>
+            <div class="c-icon">
+              <van-icon name="play-circle-o" size="18px"></van-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -59,6 +64,7 @@
         this.$router.back()
       },
       goToPlay(item, index) {
+        console.log(item)
         this.$router.push({name: 'player', params: {item: item,index: index, songs: this.songs}})
       },
       playAll () {
@@ -142,35 +148,45 @@
     }
     .content {
       padding-top: 60px;
-      padding-left: 60px;
+      padding-left: 40px;
       height: 700px;
       overflow: hidden;
       .w-content {
         .c-item {
           margin: 20px 0;
           position: relative;
-          .c-name {
+          display: flex;
+          align-items: center;
+          .index {
             font-size: 28px;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-            width: 80%;
+            color: #ccc;
+            margin-right: 30px;
           }
-          .al {
-            display: flex;
-            align-items: center;
-            width: 90%;
-            .a-name, .al-name {
+          .con {
+            width: 82%;
+            .c-name {
+              font-size: 28px;
               overflow: hidden;
               text-overflow:ellipsis;
               white-space: nowrap;
+              width: 80%;
             }
-            color: #ccc;
-          }
-          .c-icon {
-            position: absolute;
-            right: 40px;
-            top: 16px;
+            .al {
+              display: flex;
+              align-items: center;
+              width: 90%;
+              .a-name, .al-name {
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+              }
+              color: #ccc;
+            }
+            .c-icon {
+              position: absolute;
+              right: 40px;
+              top: 16px;
+            }
           }
         }
       }

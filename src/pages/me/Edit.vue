@@ -98,13 +98,29 @@
         showCity: false,
         provinceId: '',
         cityId: '',
-        showName: false
+        showName: false,
+        userId: localStorage.userId
       }
     },
     methods: {
       getUserInfo() {
-        this.$com.req(`api/user/detail?uid=${this.user.userId}`).then(res => {
-          console.log(res)
+        this.$com.req(`api/user/detail?uid=${this.userId}`).then(res => {
+          this.user = res.profile
+          if (this.user.gender === 0) {
+            this.user.sex = '保密'
+          }
+          if (this.user.gender === 1) {
+            this.user.sex = '男'
+          }
+          if (this.user.gender === 2) {
+            this.user.sex = '女'
+          }
+          this.user.birthday = this.$moment(this.user.birthday).format('YYYY-MM-DD')
+          this.user.birTime = this.$moment(this.user.birthday).valueOf()
+          this.areaList = areaList
+          this.province = areaList.province_list[this.user.province]
+          this.city = areaList.city_list[this.user.city]
+          console.log(this.user)
         }).catch(err => {
           console.log(err)
         })
@@ -153,28 +169,10 @@
       }
     },
     mounted() {
-      if (localStorage.user) {
-        this.user = JSON.parse(localStorage.user)
-        if (this.user.gender === 0) {
-          this.user.sex = '保密'
-        }
-        if (this.user.gender === 1) {
-          this.user.sex = '男'
-        }
-        if (this.user.gender === 2) {
-          this.user.sex = '女'
-        }
-        this.user.birthday = this.$moment(this.user.birthday).format("YYYY-MM-DD")
-      } else {
-        this.user = null
-      }
       let day = '1900-01-01'
       this.minDate = this.$moment(day).toDate()
       this.getUserInfo()
-      this.areaList = areaList
-      this.province = areaList.province_list[this.user.province]
-      this.city = areaList.city_list[this.user.city]
-      this.user.birTime = this.$moment(this.user.birthday).valueOf()
+
     },
     created() {
 

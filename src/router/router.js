@@ -117,6 +117,14 @@ export default new Router({
       component: () => import('../pages/login/Login')
     },
     {
+      path: '/playList',
+      name: 'playList',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/playList/PlayList')
+    },
+    {
       path: '/register',
       name: 'register',
       meta: {

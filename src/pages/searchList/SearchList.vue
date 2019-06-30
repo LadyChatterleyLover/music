@@ -17,7 +17,7 @@
                 <van-icon name="play-circle-o" size="18px"></van-icon>
                 <div>播放全部</div>
               </div>
-              <div class="item" v-for="(item, index) in searchSongs" :key="index">
+              <div class="item" v-for="(item, index) in searchSongs" :key="index" @click="play(item,index)">
                 <div>
                   <div class="name">
                     {{item.name}}
@@ -86,8 +86,7 @@
     data() {
       return {
         active: 0,
-        value: '',
-        searchSongs: [], // 搜索结果
+        // searchSongs: [], // 搜索结果
         scroll: null, // 滚动对象
         offset: 1, // 请求数据分页偏移量
         limit: 10, // 每页多少条数据
@@ -103,6 +102,16 @@
     methods: {
       back () {
         this.$router.back()
+      },
+      play(item,index) {
+        this.$store.state.detailItem.name = item.ar
+        this.$com.req(`api/song/detail?ids=${item.id}`).then(res => {
+          if (res.code === 200) {
+            let song = res.songs[0]
+            this.$router.push({name: 'player', params: {item: song, index: index, songs: this.searchSongs}})
+          }
+        })
+        console.log(item)
       },
       getMoreSongs () {
         this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}`)
@@ -196,7 +205,7 @@
       }
     },
     mounted() {
-      this.searchSongs = this.$route.params.searchSongs
+      // this.searchSongs = this.$route.params.searchSongs
       this.value = this.$route.params.searchValue
       this.searchSongs.map(item => {
         item.artists.map(item1 => {
@@ -240,7 +249,14 @@
 
     },
     filters: {},
-    computed: {},
+    computed: {
+      searchSongs () {
+        return this.$store.state.searchSongs
+      },
+      value () {
+        return this.$store.state.searchValue
+      }
+    },
     watch: {},
     directives: {}
   }

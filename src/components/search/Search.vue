@@ -104,6 +104,8 @@
         this.$com.req(`api/search?keywords=${item.first}`)
           .then(res => {
             this.searchSongs = res.result.songs
+            this.$store.state.searchSongs = res.result.songs
+            this.$store.state.searchValue = item.first
             this.$router.push({name: 'searchList', params: {searchSongs: this.searchSongs, searchValue: item.first}})
           })
         let obj = {
@@ -118,6 +120,8 @@
         this.$com.req(`api/search?keywords=${this.value}`)
           .then(res => {
             this.searchSongs = res.result.songs
+            this.$store.state.searchSongs = res.result.songs
+            this.$store.state.searchValue = this.value
             this.$router.push({name: 'searchList', params: {searchSongs: this.searchSongs, searchValue:this.searchValue}})
           })
         let obj = {
@@ -142,7 +146,9 @@
       handleItem(item) {
         this.$com.req(`api/search?keywords=${item.name}&limit=10`)
           .then(res => {
+            this.$store.state.searchValue = item.name
             this.searchSongs = res.result.songs
+            this.$store.state.searchSongs = res.result.songs
             this.$router.push({name: 'searchList', params:
                 {searchSongs: this.searchSongs, searchValue: item.name}})
           })

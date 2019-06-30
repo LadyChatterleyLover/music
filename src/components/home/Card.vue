@@ -23,7 +23,7 @@
     </div>
 
     <div class="content" v-if="Array.isArray(content[0])">
-      <div v-for="(item, index) in content[0].slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 0">
+      <div v-for="(item, index) in content[0].slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 0" @click="goToDetail(item, index)">
         <div class="img">
           <img :src="item.picUrl" alt="">
         </div>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="content" v-if="Array.isArray(content[1])">
-      <div v-for="(item, index) in content[1].slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 1">
+      <div v-for="(item, index) in content[1].slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 1" @click="goToDetail(item, index)">
         <div class="img">
           <img :src="item.album.picUrl" alt="">
         </div>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="content" v-if="!Array.isArray(content[0])">
-      <div v-for="(item, index) in content.slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 0">
+      <div v-for="(item, index) in content.slice(0, 6)" :key="item.id" class="item" v-if="activeIndex === 0" @click="goToDetail(item, index)">
         <div class="img" v-if="item.song">
           <img :src="item.song.album.picUrl" alt="">
         </div>
@@ -105,6 +105,10 @@
     methods: {
       onClick(item, index) {
         this.activeIndex = index
+      },
+      goToDetail(item, index) {
+        this.$store.state.playListId = item.id
+        this.$router.push({name: 'playList', params: {detailItem: item}})
       }
     },
     mounted() {
