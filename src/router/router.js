@@ -125,6 +125,22 @@ export default new Router({
       component: () => import('../pages/playList/PlayList')
     },
     {
+      path: '/albumPlay',
+      name: 'albumPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/albumPlay/AlbumPlay')
+    },
+    {
+      path: '/sheetPlay',
+      name: 'sheetPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/sheetPlay/SheetPlay')
+    },
+    {
       path: '/register',
       name: 'register',
       meta: {

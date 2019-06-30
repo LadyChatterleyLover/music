@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="item" v-for="(item, index) in sheet" :key="index">
+    <div class="item" v-for="(item, index) in sheet" :key="index" @click="goDetail(item)">
       <div class="img">
         <img :src="item.coverImgUrl" alt="">
       </div>
@@ -43,7 +43,12 @@
         showLoading: true
       }
     },
-    methods: {},
+    methods: {
+      goDetail(item) {
+        this.$store.state.sheetId = item.id
+        this.$router.push('/sheetPlay')
+      }
+    },
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=1000&limit=10`)
         .then(res => {

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="content">
-      <div v-for="(item, index) in albums" :key="index" class="item">
+      <div v-for="(item, index) in albums" :key="index" class="item" @click="goDetail(item)">
         <div class="img">
           <img :src="item.blurPicUrl" alt="">
         </div>
@@ -43,7 +43,12 @@
         showLoading: true
       }
     },
-    methods: {},
+    methods: {
+      goDetail(item) {
+        this.$store.state.albumId = item.id
+        this.$router.push('/albumPlay')
+      }
+    },
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=10&limit=10`)
         .then(res => {

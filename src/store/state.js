@@ -12,5 +12,7 @@ export default  {
   user: {},
   playListId: '', // 歌单id
   searchSongs: [], // 搜索结果
-  searchValue: '', // 搜索关键词
+  searchValue: '', // 搜索关键词，
+  albumId: '', // 专辑id
+  sheetId: '', // 歌单id
 }
