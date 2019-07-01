@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="item" v-for="(item, index) in radios" :key="index">
+    <div class="flex" v-if="radios.length === 0">无结果</div>
+    <div v-else class="item" v-for="(item, index) in radios" :key="index" @click="goDetail(item)">
       <div class="img">
         <img :src="item.picUrl" alt="">
       </div>
@@ -12,6 +13,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="flex" v-if="radios.length > 10">
+      <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>
 
@@ -35,7 +39,13 @@
         showLoading: true
       }
     },
-    methods: {},
+    methods: {
+      goDetail(item) {
+        console.log(item)
+        this.$store.state.radioId = item.id
+        this.$router.push('/radioPlay')
+      }
+    },
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=1009&limit=50`)
         .then(res => {

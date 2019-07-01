@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="content">
-      <div v-for="(item, index) in singer" :key="index" class="item">
+      <div class="flex" v-if="singer.length === 0">无结果</div>
+      <div v-else v-for="(item, index) in singer" :key="index" class="item" @click="goDetail(item)">
         <div class="img">
           <img :src="item.img1v1Url" alt="">
         </div>
@@ -13,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="flex">
+    <div class="flex" v-if="singer.length > 10">
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>
@@ -38,7 +39,14 @@
         showLoading: true
       }
     },
-    methods: {},
+    methods: {
+      goDetail(item) {
+        this.$store.state.singerId = item.id
+        this.$store.state.singName = item.name.substr(26, 3)
+        this.$store.state.singer = item
+        this.$router.push({name: 'singerPlay', params: {item: item}})
+      }
+    },
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=100&limit=10`)
         .then(res => {

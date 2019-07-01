@@ -15,4 +15,10 @@ export default  {
   searchValue: '', // 搜索关键词，
   albumId: '', // 专辑id
   sheetId: '', // 歌单id
+  userId: '', // 用户id
+  singerId: '', // 歌手id
+  singName: '', // 歌手关键词
+  singer: {}, // 歌手
+  radioId: '', // 电台id
+  videoId: '', // 视频id
 }

@@ -17,7 +17,6 @@
               {{item3.name}} <span v-if="index3 !== detailItem.name.length - 1">-</span>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -26,7 +25,7 @@
         <img :src="alPic" alt="" :class="{pause: isPlay === false }">
       </div>
     </div>
-    <lyric-l :lyricL="lyricL" v-if="changeIndex === 1"></lyric-l>
+<!--    <lyric-l :lyricL="lyricL" v-if="changeIndex === 1"></lyric-l>-->
     <div class="slider">
       <div class="start">
         {{start}}
@@ -42,10 +41,10 @@
         {{duration}}
       </div>
     </div>
-    <div class="change">
-      <div class="c-item" :class="{changeActive: changeIndex === 0}" @click="changeIndex = 0"></div>
-      <div class="c-item" :class="{changeActive: changeIndex === 1}" @click="changeIndex = 1"></div>
-    </div>
+<!--    <div class="change">-->
+<!--      <div class="c-item" :class="{changeActive: changeIndex === 0}" @click="changeIndex = 0"></div>-->
+<!--      <div class="c-item" :class="{changeActive: changeIndex === 1}" @click="changeIndex = 1"></div>-->
+<!--    </div>-->
     <div class="audio">
       <audio :src="url" autoplay ref="audio" @canplay="getDuration" @timeupdate="updateTime"></audio>
     </div>
@@ -162,9 +161,14 @@
       },
       // 获取专辑封面
       getAlPic() {
-        this.$com.req(`api/album?id=${this.song.al.id}`).then(res => {
-          this.alPic = res.album.picUrl
-        })
+        if (this.song.al) {
+          this.$com.req(`api/album?id=${this.song.al.id}`).then(res => {
+            this.alPic = res.album.picUrl
+          })
+        } else {
+          this.alPic = this.song.blurCoverUrl
+        }
+
       },
       // 获取音频时长
       getDuration() {
@@ -256,7 +260,7 @@
       this.songs = this.$route.params.songs
       this.getSongUrl()
       this.getAlPic()
-      this.getLyric()
+      // this.getLyric()
     },
     created() {
 

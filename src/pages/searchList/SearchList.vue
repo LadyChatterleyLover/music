@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="container">
-        <van-tabs v-model="active" :swipeable="true" :animated="true" >
+        <van-tabs v-model="active" :swipeable="true" :animated="true">
           <van-tab title="单曲">
             <div class="content">
               <div class="all">
@@ -24,7 +24,8 @@
                   </div>
                   <div class="i-desc">
                     <div v-for="(item1, index1) in item.artists" :key="index1" class="d-name">
-                      <span v-html="item1.name"></span>&nbsp;<span v-if="index1 !== item.artists.length - 1">/&nbsp;</span>
+                      <span v-html="item1.name"></span>&nbsp;<span
+                        v-if="index1 !== item.artists.length - 1">/&nbsp;</span>
                     </div>
                     <div class="i-name">
                       &nbsp;- {{item.album.name}}
@@ -35,7 +36,7 @@
                   <van-icon name="play-circle-o" size="18px"></van-icon>
                 </div>
               </div>
-              <div class="flex">
+              <div class="flex" v-if="searchSongs.length > 10">
                 <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
               </div>
             </div>
@@ -72,6 +73,7 @@
   import user from '../../components/search/Users'
   import mv from '../../components/search/Videos'
   import radios from '../../components/search/Radio'
+
   export default {
     name: "SearchList",
     components: {
@@ -100,10 +102,10 @@
       }
     },
     methods: {
-      back () {
+      back() {
         this.$router.back()
       },
-      play(item,index) {
+      play(item, index) {
         this.$store.state.detailItem.name = item.ar
         this.$com.req(`api/song/detail?ids=${item.id}`).then(res => {
           if (res.code === 200) {
@@ -111,97 +113,96 @@
             this.$router.push({name: 'player', params: {item: song, index: index, songs: this.searchSongs}})
           }
         })
-        console.log(item)
       },
-      getMoreSongs () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}`)
-          .then(res => {
-            let result = res.result.songs
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.searchSongs.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreSongs() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}`)
+            .then(res => {
+              let result = res.result.songs
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.searchSongs.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       },
-      getMoreAlbums () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=10`)
-          .then(res => {
-            let result = res.result.albums
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.moreAlbums.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreAlbums() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}&type=10`)
+            .then(res => {
+              let result = res.result.albums
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.moreAlbums.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       },
-      getMoreSingers () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=100`)
-          .then(res => {
-            let result = res.result.artists
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.moreSingers.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreSingers() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}&type=100`)
+            .then(res => {
+              let result = res.result.artists
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.moreSingers.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       },
-      getMoreSheets () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=1000`)
-          .then(res => {
-            let result = res.result.playlists
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.moreSheets.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreSheets() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}&type=1000`)
+            .then(res => {
+              let result = res.result.playlists
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.moreSheets.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       },
-      getMoreUsers () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=1002`)
-          .then(res => {
-            let result = res.result.userprofiles
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.moreUsers.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreUsers() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}&type=1002`)
+            .then(res => {
+              let result = res.result.userprofiles
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.moreUsers.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       },
-      getMoreVideos () {
-        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset*this.limit}&type=1014`)
-          .then(res => {
-            let result = res.result.videos
-            if (result.length > 0) {
-              this.showLoading = false
-              this.offset ++
-              result.map((item => {
-                this.moreVideos.push(item)
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
-              }))
-            }
-          })
+      getMoreVideos() {
+        this.$com.req(`api/search?keywords=${this.value}&limit=${this.limit}&offset=${this.offset * this.limit}&type=1014`)
+            .then(res => {
+              let result = res.result.videos
+              if (result.length > 0) {
+                this.showLoading = false
+                this.offset++
+                result.map((item => {
+                  this.moreVideos.push(item)
+                  this.scroll.finishPullUp()
+                  this.scroll.refresh()
+                }))
+              }
+            })
       }
     },
     mounted() {
@@ -222,7 +223,7 @@
           pullUpLoad: {
             threshold: -30 // 当上拉距离超过30px时触发 pullingUp 事件
           }
-          })
+        })
         this.scroll.on('pullingUp', () => {
           if (this.active === 0) {
             this.getMoreSongs()
@@ -250,11 +251,16 @@
     },
     filters: {},
     computed: {
-      searchSongs () {
+      searchSongs() {
         return this.$store.state.searchSongs
       },
-      value () {
-        return this.$store.state.searchValue
+      value: {
+        get() {
+          return this.$store.state.searchValue
+        },
+        set() {
+
+        }
       }
     },
     watch: {},
@@ -271,56 +277,69 @@
       height: auto;
     }
   }
+
   .flex {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 120px;
   }
+
   .top {
     width: 100%;
     display: flex;
     align-items: center;
+
     .t-icon {
       margin-left: 20px;
     }
+
     .t-search {
       flex: 2;
     }
   }
+
   .content {
     margin-top: 40px;
+
     .all {
       display: flex;
       align-items: center;
       margin-left: 20px;
+
       div {
         margin-left: 20px;
         font-size: 28px;
       }
     }
+
     .item {
       display: flex;
       align-items: center;
       position: relative;
       margin: 20px;
+
       .icon {
         position: absolute;
         right: 40px;
         top: 30px;
       }
+
       .name {
         margin: 10px 0;
         font-size: 28px;
       }
+
       .i-desc {
         display: flex;
         align-items: center;
         color: #ccc;
+
         .d-desc {
           /*display: flex;*/
           /*align-items: center;*/
         }
+
         .i-name {
 
         }

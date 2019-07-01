@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="flex" v-if="sheet.length === 0">无结果</div>
     <div class="item" v-for="(item, index) in sheet" :key="index" @click="goDetail(item)">
       <div class="img">
         <img :src="item.coverImgUrl" alt="">
@@ -19,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="flex">
+    <div class="flex" v-if="sheet.length > 10">
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>

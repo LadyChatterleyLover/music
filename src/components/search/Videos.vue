@@ -2,7 +2,7 @@
   <div>
     <div class="content">
       <div class="flex" v-if="videos.length === 0">无结果</div>
-      <div v-else class="item" v-for="(item, index) in videos" :key="index">
+      <div v-else class="item" v-for="(item, index) in videos" :key="index" @click="goDetail(item)">
         <div class="i-con">
           <div class="img">
             <img :src="item.coverUrl" alt="">
@@ -39,9 +39,8 @@
           </div>
         </div>
       </div>
-
     </div>
-    <div class="flex">
+    <div class="flex" v-if="videos.length > 10">
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>
@@ -66,7 +65,13 @@
         showLoading: true
       }
     },
-    methods: {},
+    methods: {
+      goDetail(item) {
+        console.log(item)
+        this.$store.state.videoId = item.vid
+        this.$router.push('/videoPlay')
+      }
+    },
     mounted() {
       this.$com.req(`api/search?keywords=${this.value}&type=1014&limit=10`)
         .then(res => {

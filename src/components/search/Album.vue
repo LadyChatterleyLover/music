@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <div class="content">
-      <div v-for="(item, index) in albums" :key="index" class="item" @click="goDetail(item)">
+      <div class="flex" v-if="albums.length === 0">无结果</div>
+      <div v-else v-for="(item, index) in albums" :key="index" class="item" @click="goDetail(item)">
         <div class="img">
           <img :src="item.blurPicUrl" alt="">
         </div>
@@ -18,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="flex">
+    <div class="flex" v-if="albums.length > 10">
       <van-loading size="20px" color="#C10D0D" v-if="showLoading">加载中...</van-loading>
     </div>
   </div>

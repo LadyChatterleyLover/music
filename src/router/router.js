@@ -141,6 +141,38 @@ export default new Router({
       component: () => import('../pages/sheetPlay/SheetPlay')
     },
     {
+      path: '/userPlay',
+      name: 'userPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/userPlay/UserPlay')
+    },
+    {
+      path: '/singerPlay',
+      name: 'singerPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/singerPlay/SingerPlay')
+    },
+    {
+      path: '/radioPlay',
+      name: 'radioPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/radioPlay/RadioPlay')
+    },
+    {
+      path: '/videoPlay',
+      name: 'videoPlay',
+      meta: {
+        showFooter: false
+      },
+      component: () => import('../pages/videoPlay/VideoPlay')
+    },
+    {
       path: '/register',
       name: 'register',
       meta: {
