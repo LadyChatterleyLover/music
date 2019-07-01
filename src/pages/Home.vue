@@ -55,7 +55,7 @@
               排行榜
             </div>
             <div class="n-icon">
-              <img src="../icons/song.svg" alt="">
+              <img src="../icons/rank.svg" alt="">
             </div>
           </div>
           <div class="nav-item" @click="goTo('/radio')">

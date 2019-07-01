@@ -107,7 +107,6 @@
       getSongUrl() {
         this.$com.req(`api/song/url?id=${this.song.id}`)
             .then(res => {
-              console.log(res)
               this.url = res.data[0].url
             })
       },
@@ -161,7 +160,6 @@
       },
       // 获取专辑封面
       getAlPic() {
-        console.log(this.song)
         if (this.song.al) {
           this.$com.req(`api/album?id=${this.song.al.id}`).then(res => {
             this.alPic = res.album.picUrl
