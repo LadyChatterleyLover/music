@@ -31,9 +31,6 @@
 
 <style lang="scss">
   @import "./styles/common";
-  .body,.html {
-    height: 100vh;
-  }
   .search-text {
     color: skyblue !important;
   }

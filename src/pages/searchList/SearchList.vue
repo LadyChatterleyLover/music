@@ -270,11 +270,15 @@
 
 <style scoped lang="scss">
   .wrapper {
+    position: fixed;
     height: 100vh;
     overflow: hidden;
+    bottom: 20px;
+    width: 100%;
+    top: 10px;
 
     .w-content {
-      height: auto;
+      /*height: auto;*/
     }
   }
 

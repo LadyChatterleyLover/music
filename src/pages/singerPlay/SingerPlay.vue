@@ -152,12 +152,13 @@
   }
 
   .wrapper {
-    position: relative;
+    position: fixed;
     height: 100vh;
     overflow: hidden;
+    top: 0px;
 
     .w-content {
-      height: auto;
+      /*height: 100%;*/
       position: relative;
       .img {
         width: 100%;

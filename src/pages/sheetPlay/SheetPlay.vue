@@ -152,12 +152,13 @@
   }
 
   .wrapper {
-    position: relative;
+    position: fixed;
     height: 100vh;
     overflow: hidden;
+    bottom: 20px;
 
     .w-content {
-      height: auto;
+      /*height: 100%;*/
       position: relative;
       .userName {
         font-size: 32px;

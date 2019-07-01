@@ -197,11 +197,15 @@
 
 <style scoped lang="scss">
   .wrapper {
-    height: 100vh;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    bottom: 100px;
+    left: 0;
+    right: 0;
 
     .w-content {
-      height: auto;
+      height: 100%;
     }
   }
 

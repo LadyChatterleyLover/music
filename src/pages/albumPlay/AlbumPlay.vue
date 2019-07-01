@@ -151,12 +151,13 @@
   }
 
   .wrapper {
-    position: relative;
+    position: fixed;
     height: 100vh;
     overflow: hidden;
+    bottom: 20px;
+    top: 0px;
 
     .w-content {
-      height: auto;
       position: relative;
       .singerName {
         font-size: 32px;

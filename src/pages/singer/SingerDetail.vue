@@ -147,11 +147,14 @@
       }
     }
     .content {
-      padding-top: 60px;
-      padding-left: 40px;
-      height: 700px;
       overflow: hidden;
+      position: fixed;
+      top: 0;
+      bottom: 100px;
+      left: 0;
+      right: 0;
       .w-content {
+        height: 100%;
         .c-item {
           margin: 20px 0;
           position: relative;

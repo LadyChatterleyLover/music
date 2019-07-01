@@ -164,9 +164,11 @@
   }
 
   .wrapper {
-    position: relative;
+    position: fixed;
     height: 100vh;
     overflow: hidden;
+    bottom: 20px;
+    top: 0;
 
     .w-content {
       height: auto;
