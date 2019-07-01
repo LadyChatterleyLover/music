@@ -161,11 +161,17 @@
       },
       // 获取专辑封面
       getAlPic() {
+        console.log(this.song)
         if (this.song.al) {
           this.$com.req(`api/album?id=${this.song.al.id}`).then(res => {
             this.alPic = res.album.picUrl
           })
-        } else {
+        } else if (this.song.album) {
+          this.$com.req(`api/album?id=${this.song.album.id}`).then(res => {
+            this.alPic = res.album.picUrl
+          })
+        }
+        else {
           this.alPic = this.song.blurCoverUrl
         }
 
@@ -226,7 +232,7 @@
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
-          this.getLyric()
+          // this.getLyric()
         }
       },
       // 下一首
@@ -238,7 +244,7 @@
           this.song = this.songs[this.currentIndex]
           this.getSongUrl()
           this.getAlPic()
-          this.getLyric()
+          // this.getLyric()
         }
       },
       // 获取歌词
