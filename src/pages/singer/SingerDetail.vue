@@ -148,13 +148,14 @@
     }
     .content {
       overflow: hidden;
-      position: fixed;
-      top: 0;
-      bottom: 100px;
-      left: 0;
-      right: 0;
+      /*position: fixed;*/
+      /*top: 560px;*/
+      /*bottom: 100px;*/
+      /*left: 0;*/
+      /*right: 0;*/
+      margin-left: 40px;
+      height: 800px;
       .w-content {
-        height: 100%;
         .c-item {
           margin: 20px 0;
           position: relative;
