@@ -12,7 +12,7 @@
     "core-js": "^2.6.5",
     "dayjs": "^1.8.14",
     "lib-flexible": "^0.3.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "postcss-px2rem-exclude": "^0.0.6",
     "qs": "^6.7.0",
     "vant": "^2.0.2",
